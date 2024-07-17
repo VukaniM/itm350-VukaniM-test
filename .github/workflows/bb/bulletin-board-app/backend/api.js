@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const uuidv4 = require('uuid').v4;
+const statusCodes = require('http').STATUS_CODES;
+const httpConstants = require('http2').constants;
 
 // Include the AWS SDK module
 const AWS = require('aws-sdk');
