@@ -1,37 +1,41 @@
+const { v4: uuidv4 } = require('uuid'); // Import the uuid library
+
 new Vue({
   el: '#events',
 
   data: {
-    event: { title: '', detail: '', date: '' },
+    event: { id: '', title: '', detail: '', date: '' },
     events: []
   },
 
-  ready: function () {
+  mounted: function () {
     this.fetchEvents();
   },
 
   methods: {
 
     fetchEvents: function () {
-      var events = [];
       this.$http.get('/api/events')
-        .success(function (events) {
-          this.$set('events', events);
-          console.log(events);
+        .then(response => {
+          this.events = response.data;
+          console.log(this.events);
         })
-        .error(function (err) {
+        .catch(err => {
           console.log(err);
         });
     },
 
     addEvent: function () {
       if (this.event.title.trim()) {
+        this.event.id = uuidv4(); // Assign a unique ID to the event
         this.$http.post('/api/events', this.event)
-          .success(function (res) {
+          .then(response => {
             this.events.push(this.event);
-            console.log('Event added!');
+            console.log('Event added!', response.data);
+            // Reset the event object after adding
+            this.event = { id: '', title: '', detail: '', date: '' };
           })
-          .error(function (err) {
+          .catch(err => {
             console.log(err);
           });
       }
@@ -40,12 +44,14 @@ new Vue({
     deleteEvent: function (id) {
       if (confirm('Are you sure you want to delete this event?')) {        
         this.$http.delete('api/events/' + id)
-          .success(function (res) {
-            console.log(res);
-            var index = this.events.find(x => x.id === id)
-            this.events.splice(index, 1);
+          .then(response => {
+            console.log(response.data);
+            const index = this.events.findIndex(event => event.id === id);
+            if (index !== -1) {
+              this.events.splice(index, 1);
+            }
           })
-          .error(function (err) {
+          .catch(err => {
             console.log(err);
           });
       }
