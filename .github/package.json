@@ -18,7 +18,8 @@
     "errorhandler": "^1.4.2",
     "method-override": "^2.3.5",
     "morgan": "^1.6.1",
-    "aws-sdk": "^2.814.0"
+    "aws-sdk": "^2.814.0",
+    "node-fetch2": "^1.6.3"
   },
   "scripts": {
     "start": "node server.js"
